@@ -2,12 +2,13 @@ class TweetCriteria:
 	
 	def __init__(self):
 		self.maxTweets = 0
-		self.within = '15mi'
 
 	def set(self, q=None, username=None, 
 			since=None,	until=None,
 			near=None,	within=None,
 			max_tweets=None, top_tweets=None):
+		if q:
+			self.setQuerySearch(q)
 		if username: 
 			self.setUsername(username)
 		if since:
@@ -38,6 +39,8 @@ class TweetCriteria:
 
 	def setNear(self, near):
 		self.near = near
+		if not hasattr(self, 'within'):
+			self.within = '15mi'
 		return self
 
 	def setWithin(self, within):
