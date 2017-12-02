@@ -64,7 +64,7 @@ def fix_no_space_url(s):
     '''For some reason, there are sometimes spaces in urls. at least from what I remember. I haven't worked on this in like a year.'''
     return patterns.fix_urls.sub('\g<1> \g<2>', s)
 
-def filter(tokens, 
+def filter_tokens(tokens, 
     lowercase=True, 
     remove_stopwords=True, 
     remove_urls=True, 
@@ -91,7 +91,7 @@ def filter(tokens,
     return tokens
  
 def tweet_tokenize(s, **kw):
-    return filter(tokenize(s), **kw)
+    return filter_tokens(tokenize(s), **kw)
 
 
 
