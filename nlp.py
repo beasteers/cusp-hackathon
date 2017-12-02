@@ -64,34 +64,38 @@ def fix_no_space_url(s):
     '''For some reason, there are sometimes spaces in urls. at least from what I remember. I haven't worked on this in like a year.'''
     return patterns.fix_urls.sub('\g<1> \g<2>', s)
 
-def filter(tokens, 
+def filter_tokens(tokens, 
     lowercase=True, 
     remove_stopwords=True, 
     remove_urls=True, 
     remove_emojis=True, 
     remove_mentions=True, 
     remove_nonascii=True,
-    remove_punctuation=True):
+    remove_punctuation=True, 
+    remove_nonprintable=True):
     
     tokens = filter(len, tokens)
     if remove_emojis:
         tokens = [token for token in tokens if not patterns.emoticon.search(token)]
     if remove_nonascii:
-        tokens = [token for token in tokens if len(tokens) == 1 and ord(tokens[0]) > 128]
+        tokens = [token for token in tokens if not len(tokens) == 1 or ord(tokens[0]) < 128]
     if lowercase:
         tokens = [token if remove_emojis or patterns.emoticon.search(token) else token.lower() for token in tokens]
     if remove_stopwords:
         tokens = [token for token in tokens if token not in stop]
     if remove_punctuation:
         tokens = [token for token in tokens if token not in punctuation]
+    if remove_nonprintable:
+        tokens = [token for token in tokens if token not in nonprintable]
     if remove_urls:
         tokens = [token for token in tokens if not patterns.url.match(token)]
     if remove_mentions:
         tokens = [token for token in tokens if not patterns.mention.match(token)]
+    
     return tokens
  
 def tweet_tokenize(s, **kw):
-    return filter(tokenize(s), **kw)
+    return filter_tokens(tokenize(s), **kw)
 
 
 
