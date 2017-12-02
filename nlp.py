@@ -70,10 +70,14 @@ def filter(tokens,
     remove_urls=True, 
     remove_emojis=True, 
     remove_mentions=True, 
+    remove_nonascii=True,
     remove_punctuation=True):
     
+    tokens = filter(len, tokens)
     if remove_emojis:
         tokens = [token for token in tokens if not patterns.emoticon.search(token)]
+    if remove_nonascii:
+        tokens = [token for token in tokens if len(tokens) == 1 and ord(tokens[0]) > 128]
     if lowercase:
         tokens = [token if remove_emojis or patterns.emoticon.search(token) else token.lower() for token in tokens]
     if remove_stopwords:
